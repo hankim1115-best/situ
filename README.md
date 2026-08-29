@@ -63,10 +63,26 @@ src/
   views/              home, result, library, setDetail, review, practice, settings
 ```
 
-## 배포 (나중에)
+## 배포 — GitHub Pages
 
-정적 호스팅 아무 곳이나 폴더째 올리면 됩니다 (Netlify drop, Cloudflare Pages, GitHub Pages 등).
-HTTPS면 서비스 워커가 등록되어 완전한 오프라인 설치형 앱이 됩니다.
+이 폴더는 git 저장소로 초기화돼 있습니다(`main` 브랜치). 정적 파일뿐이라 루트에서 그대로 서빙됩니다.
+
+```bash
+gh auth login
+gh repo create situ --public --source="." --remote=origin --push
+gh api --method POST "repos/{owner}/{repo}/pages" -f "source[branch]=main" -f "source[path]=/"
+```
+
+- 1분쯤 뒤 `https://<GitHub사용자명>.github.io/situ/` 에서 열립니다.
+- 무료 계정은 **public** 저장소만 Pages 가능. 이 앱은 비밀정보가 없어 공개해도 안전합니다
+  (API 키는 각 사용자의 브라우저 localStorage에만 저장, 배포 파일엔 없음).
+- 수정 후 반영: `git add -A && git commit -m "..." && git push` (파일을 바꿨으면 `sw.js`의
+  `CACHE` 버전도 올릴 것).
+
+### 휴대폰에 설치
+
+폰 브라우저(크롬/사파리)로 위 URL을 열고 → **홈 화면에 추가**. HTTPS이므로 서비스 워커가
+등록되어 오프라인에서도 저장·복습·역할극이 동작합니다(대화/키워드 생성만 인터넷 필요).
 
 ## 커스터마이즈 포인트
 
