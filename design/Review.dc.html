@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", Roboto, sans-serif; background: #f4f4f7; color: #16171d; -webkit-font-smoothing: antialiased; }
+    a { color: #4338ca; text-decoration: none; } a:hover { color: #3730a3; }
+    .phone { width: 390px; background: #f4f4f7; display: flex; flex-direction: column; min-height: 844px; }
+    .appbar { display: flex; align-items: center; gap: 8px; padding: 16px 16px 12px; border-bottom: 1px solid #e2e4ec; background: #f4f4f7; }
+    .appbar h1 { font-size: 19px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+    .wrap { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .progress { text-align: center; color: #5b6070; font-size: 13px; }
+    .cardface { background: #fff; border: 1px solid #e2e4ec; border-radius: 16px; padding: 28px 20px; min-height: 220px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; }
+    .cardface .src { font-size: 13px; color: #5b6070; }
+    .cardface .front { font-size: 21px; font-weight: 700; line-height: 1.4; }
+    .cardface .back { font-size: 16px; color: #5b6070; }
+    .listen { border: 1px solid #e2e4ec; border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 600; color: #16171d; display: inline-flex; align-items: center; gap: 6px; }
+    .listen svg { width: 16px; height: 16px; }
+    .grade { display: flex; gap: 8px; }
+    .grade .b { flex: 1; padding: 14px 8px; border-radius: 12px; text-align: center; font-weight: 600; font-size: 15px; }
+    .grade .b.no { color: #c0362c; border: 1px solid #e6c9c6; background: #fff; }
+    .grade .b.soso { border: 1px solid #e2e4ec; background: #fff; }
+    .grade .b.yes { background: #4338ca; color: #fff; }
+    .tabbar { display: flex; border-top: 1px solid #e2e4ec; background: #f4f4f7; }
+    .tabbar .t { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 0 11px; font-size: 11px; font-weight: 600; color: #5b6070; }
+    .tabbar .t.on { color: #4338ca; }
+    .tabbar .t svg { width: 22px; height: 22px; }
+  </style>
+</helmet>
+
+<div class="phone">
+  <div class="appbar"><h1>복습</h1></div>
+
+  <div class="wrap">
+    <div class="progress">2 / 12</div>
+
+    <div class="cardface">
+      <div class="src">새 팀 첫 인사</div>
+      <div class="front">I'd love to grab a coffee and hear what you're working on.</div>
+      <div class="back">커피 한잔 하면서 어떤 일 하시는지 듣고 싶어요.</div>
+      <span class="listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/><path d="M19 7a7 7 0 0 1 0 10"/></svg>
+        듣기
+      </span>
+    </div>
+
+    <div class="grade">
+      <div class="b no">모름</div>
+      <div class="b soso">애매</div>
+      <div class="b yes">잘 앎</div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <div class="t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.12 2.12 0 0 0-3-3L5 17v3z"/><path d="M13.5 6.5l3 3"/></svg>
+      상황
+    </div>
+    <div class="t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+      라이브러리
+    </div>
+    <div class="t on">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+      복습
+    </div>
+    <div class="t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+      설정
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

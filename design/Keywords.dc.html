@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", Roboto, sans-serif; background: #f4f4f7; color: #16171d; -webkit-font-smoothing: antialiased; }
+    a { color: #4338ca; text-decoration: none; } a:hover { color: #3730a3; }
+    .phone { width: 390px; background: #f4f4f7; display: flex; flex-direction: column; min-height: 844px; }
+    .appbar { display: flex; align-items: center; gap: 6px; padding: 16px 16px 12px; border-bottom: 1px solid #e2e4ec; background: #f4f4f7; }
+    .appbar .back { display: flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 600; color: #16171d; }
+    .appbar .back svg { width: 18px; height: 18px; }
+    .appbar h1 { font-size: 19px; font-weight: 700; margin: 0 0 0 4px; letter-spacing: -0.01em; }
+    .wrap { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .card { background: #fff; border: 1px solid #e2e4ec; border-radius: 16px; padding: 16px; }
+    .card h3 { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #5b6070; }
+    .card p { margin: 0; font-size: 15px; line-height: 1.55; }
+    .card .who { font-size: 13px; font-weight: 700; color: #5b6070; margin-bottom: 4px; }
+    .note { font-size: 13px; color: #5b6070; margin: 0 2px; line-height: 1.5; }
+    .segmented { display: flex; background: #eef0f5; border-radius: 12px; padding: 4px; gap: 4px; }
+    .segmented > div { flex: 1; text-align: center; padding: 9px 8px; border-radius: 9px; font-size: 14px; font-weight: 600; color: #5b6070; }
+    .segmented > div.on { background: #fff; color: #16171d; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .line { padding: 12px 0; border-bottom: 1px solid #e2e4ec; }
+    .line:first-of-type { padding-top: 0; }
+    .line:last-child { border-bottom: 0; padding-bottom: 0; }
+    .line .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .line .en { font-weight: 600; font-size: 15px; line-height: 1.5; }
+    .line .ko { color: #5b6070; font-size: 14px; margin-top: 3px; line-height: 1.5; }
+    .line .meta { color: #5b6070; font-size: 12px; margin-top: 4px; line-height: 1.5; }
+    .speak { flex: none; border: 1px solid #e2e4ec; border-radius: 8px; padding: 4px; color: #5b6070; display: inline-flex; }
+    .speak svg { width: 15px; height: 15px; display: block; }
+    .btn { padding: 14px 16px; border-radius: 12px; font-weight: 600; font-size: 15px; text-align: center; }
+    .btn.primary { background: #4338ca; color: #fff; }
+    .btn.ghost { border: 1px solid #e2e4ec; background: transparent; }
+  </style>
+</helmet>
+
+<div class="phone">
+  <div class="appbar">
+    <span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>뒤로</span>
+    <h1>키워드 학습</h1>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="who">상대 · 병원 접수처 / 의사</div>
+      <p>가정의에게 전화로 증상을 설명하고 진료 예약 잡기</p>
+    </div>
+
+    <p class="note">예약 전화에서 자주 나오는 다섯 단어입니다. 먼저 익혀두면 통화가 훨씬 수월해요.</p>
+
+    <div class="segmented">
+      <div class="on">목록</div>
+      <div>카드</div>
+    </div>
+
+    <div class="card">
+      <h3>키워드 5</h3>
+
+      <div class="line">
+        <div class="top"><div class="en">family doctor / GP</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">(명사) 가정의 · 주치의</div>
+        <div class="meta">I'd like to book an appointment with my family doctor.</div>
+        <div class="meta">가정의 진료 예약을 잡고 싶어요.</div>
+        <div class="meta">발음 · 'GP'는 각 글자를 또박또박, '지-피'</div>
+        <div class="meta">쓰임 · 캐나다에선 전문의 전에 먼저 가정의를 봅니다.</div>
+      </div>
+
+      <div class="line">
+        <div class="top"><div class="en">walk-in clinic</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">(명사) 예약 없이 가는 병원</div>
+        <div class="meta">If it's urgent, try a walk-in clinic.</div>
+        <div class="meta">급하면 워크인 클리닉에 가보세요.</div>
+        <div class="meta">발음 · 'walk'의 l은 소리내지 않음</div>
+      </div>
+
+      <div class="line">
+        <div class="top"><div class="en">referral</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">(명사) 전문의 의뢰서</div>
+        <div class="meta">You'll need a referral to see a specialist.</div>
+        <div class="meta">전문의를 보려면 의뢰서가 필요해요.</div>
+        <div class="meta">발음 · 강세는 '-fer-'에</div>
+      </div>
+
+      <div class="line">
+        <div class="top"><div class="en">symptom</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">(명사) 증상</div>
+        <div class="meta">My main symptom is a sore throat.</div>
+        <div class="meta">주요 증상은 인후통이에요.</div>
+        <div class="meta">발음 · 'p'는 거의 안 들리게, '심텀'</div>
+      </div>
+
+      <div class="line">
+        <div class="top"><div class="en">health card</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">(명사) 건강보험 카드</div>
+        <div class="meta">Please bring your health card.</div>
+        <div class="meta">건강보험 카드를 가져오세요.</div>
+        <div class="meta">쓰임 · 접수 시 항상 요구됩니다.</div>
+      </div>
+    </div>
+
+    <div class="btn primary">이 키워드로 대화 팩 만들기</div>
+    <div class="btn ghost">복습 덱에 저장</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

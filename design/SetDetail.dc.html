@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", Roboto, sans-serif; background: #f4f4f7; color: #16171d; -webkit-font-smoothing: antialiased; }
+    a { color: #4338ca; text-decoration: none; } a:hover { color: #3730a3; }
+    .phone { width: 390px; background: #f4f4f7; display: flex; flex-direction: column; min-height: 844px; }
+    .appbar { display: flex; align-items: center; gap: 6px; padding: 16px 16px 12px; border-bottom: 1px solid #e2e4ec; background: #f4f4f7; }
+    .appbar .back { display: flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 600; color: #16171d; }
+    .appbar .back svg { width: 18px; height: 18px; }
+    .appbar h1 { font-size: 18px; font-weight: 700; margin: 0 0 0 4px; letter-spacing: -0.01em; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .appbar .action { font-size: 14px; font-weight: 600; color: #5b6070; }
+    .wrap { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .card { background: #fff; border: 1px solid #e2e4ec; border-radius: 16px; padding: 16px; }
+    .card h3 { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #5b6070; }
+    .card p { margin: 0; font-size: 15px; line-height: 1.55; }
+    .card .who { font-size: 13px; font-weight: 700; color: #5b6070; margin-bottom: 4px; }
+    .card .goal { margin-top: 6px; font-size: 13px; color: #5b6070; }
+    .actionrow { display: flex; gap: 10px; }
+    .btn { padding: 13px 16px; border-radius: 12px; font-weight: 600; font-size: 15px; text-align: center; }
+    .btn.primary { background: #4338ca; color: #fff; flex: 1; }
+    .btn.outline { border: 1px solid #e2e4ec; background: #fff; flex: 1; }
+    .btn.danger { color: #c0362c; border: 1px solid #e6c9c6; background: #fff; }
+    .line { padding: 12px 0; border-bottom: 1px solid #e2e4ec; }
+    .line:first-of-type { padding-top: 0; }
+    .line:last-child { border-bottom: 0; padding-bottom: 0; }
+    .line .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .line .en { font-weight: 600; font-size: 15px; line-height: 1.5; }
+    .line .ko { color: #5b6070; font-size: 14px; margin-top: 3px; line-height: 1.5; }
+    .line .meta { color: #5b6070; font-size: 12px; margin-top: 5px; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 6px; background: #eef0f5; color: #5b6070; margin-right: 6px; }
+    .speak { flex: none; border: 1px solid #e2e4ec; border-radius: 8px; padding: 4px; color: #5b6070; display: inline-flex; }
+    .speak svg { width: 15px; height: 15px; display: block; }
+    .bubble { display: flex; margin: 8px 0; }
+    .bubble:first-child { margin-top: 0; }
+    .bubble.you { justify-content: flex-end; }
+    .bubble .body { max-width: 82%; padding: 10px 13px; border-radius: 14px; background: #eef0f5; }
+    .bubble.you .body { background: #ecebfb; }
+    .bubble .who { font-size: 11px; font-weight: 700; color: #5b6070; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .bubble .en { font-size: 14px; font-weight: 600; }
+    .bubble .ko { font-size: 13px; color: #5b6070; margin-top: 3px; }
+    ul.notes { margin: 0; padding-left: 18px; }
+    ul.notes li { margin: 6px 0; font-size: 14px; line-height: 1.5; }
+  </style>
+</helmet>
+
+<div class="phone">
+  <div class="appbar">
+    <span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>뒤로</span>
+    <h1>새 팀 첫 인사</h1>
+    <span class="action">이름변경</span>
+  </div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="who">상대 · 새 동료</div>
+      <p>새 팀에 합류한 첫날, 팀원들에게 나를 소개하고 자연스럽게 대화 나누기</p>
+      <div class="goal">목표: 어색하지 않게 친해지기</div>
+    </div>
+
+    <div class="actionrow">
+      <div class="btn primary">복습 (6)</div>
+      <div class="btn outline">역할극 연습</div>
+    </div>
+
+    <div class="card">
+      <h3>상황 읽기</h3>
+      <p>캐나다 직장에서는 첫날 가벼운 스몰토크가 중요합니다. 너무 격식 차리지 말고, 친근하고 편안한 톤을 목표로 하세요.</p>
+    </div>
+
+    <div class="card">
+      <h3>핵심 표현</h3>
+      <div class="line">
+        <div class="top"><div class="en">I just joined the team this week.</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">이번 주에 팀에 합류했어요.</div>
+        <div class="meta"><span class="tag">보통</span>자기소개를 시작할 때</div>
+      </div>
+      <div class="line">
+        <div class="top"><div class="en">I'd love to grab a coffee and hear what you're working on.</div><span class="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></span></div>
+        <div class="ko">커피 한잔 하면서 어떤 일 하시는지 듣고 싶어요.</div>
+        <div class="meta"><span class="tag">캐주얼</span>친해지고 싶을 때</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>예시 대화</h3>
+      <div class="bubble them"><div class="body"><div class="who">상대</div><div class="en">Hey, you must be the new hire! Welcome.</div><div class="ko">안녕하세요, 새로 오신 분이죠! 환영해요.</div></div></div>
+      <div class="bubble you"><div class="body"><div class="who">나</div><div class="en">Thanks! Yeah, I started Monday.</div><div class="ko">감사해요! 월요일에 시작했어요.</div></div></div>
+    </div>
+
+    <div class="card">
+      <h3>캐나다 문화 노트</h3>
+      <ul class="notes">
+        <li>첫 주에는 질문을 많이 해도 괜찮습니다.</li>
+        <li>점심 초대를 받으면 웬만하면 수락하세요.</li>
+      </ul>
+    </div>
+
+    <div class="btn danger">이 대화 팩 삭제</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

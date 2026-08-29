@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Noto Sans KR", Roboto, sans-serif; background: #f4f4f7; color: #16171d; -webkit-font-smoothing: antialiased; }
+    a { color: #4338ca; text-decoration: none; } a:hover { color: #3730a3; }
+    .phone { width: 390px; background: #f4f4f7; display: flex; flex-direction: column; min-height: 844px; }
+    .appbar { display: flex; align-items: center; gap: 6px; padding: 16px 16px 12px; border-bottom: 1px solid #e2e4ec; background: #f4f4f7; }
+    .appbar .back { display: flex; align-items: center; gap: 3px; font-size: 15px; font-weight: 600; color: #16171d; }
+    .appbar .back svg { width: 18px; height: 18px; }
+    .appbar h1 { font-size: 17px; font-weight: 700; margin: 0 0 0 4px; letter-spacing: -0.01em; }
+    .wrap { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+    .progress { text-align: center; color: #5b6070; font-size: 13px; }
+    .bubble { display: flex; margin: 6px 0; }
+    .bubble.you { justify-content: flex-end; }
+    .bubble .body { max-width: 82%; padding: 10px 13px; border-radius: 14px; background: #eef0f5; }
+    .bubble.you .body { background: #ecebfb; }
+    .bubble .who { font-size: 11px; font-weight: 700; color: #5b6070; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .bubble .en { font-size: 14px; }
+    .card { background: #fff; border: 1px solid #e2e4ec; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .card .turnwho { font-size: 11px; font-weight: 700; color: #5b6070; text-transform: uppercase; letter-spacing: 0.04em; }
+    .card .goal { font-size: 13px; color: #5b6070; }
+    .textarea { border: 1px solid #e2e4ec; border-radius: 12px; padding: 12px 14px; min-height: 70px; font-size: 15px; color: #9aa0b0; }
+    .mini { align-self: flex-start; border: 1px solid #e2e4ec; border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .mini svg { width: 15px; height: 15px; }
+    .suggest { border-top: 1px solid #e2e4ec; padding-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .suggest .lbl { font-size: 12px; color: #5b6070; }
+    .suggest .en { font-size: 16px; font-weight: 600; }
+    .row { display: flex; gap: 10px; }
+    .btn { padding: 12px 16px; border-radius: 12px; font-weight: 600; font-size: 15px; text-align: center; }
+    .btn.outline { border: 1px solid #e2e4ec; background: #fff; flex: 1; }
+    .btn.primary { background: #4338ca; color: #fff; flex: 1; }
+  </style>
+</helmet>
+
+<div class="phone">
+  <div class="appbar">
+    <span class="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>뒤로</span>
+    <h1>역할극 · 새 팀 첫 인사</h1>
+  </div>
+
+  <div class="wrap">
+    <div class="progress">2 / 4</div>
+
+    <div class="bubble them"><div class="body"><div class="who">상대</div><div class="en">Hey, you must be the new hire! Welcome.</div></div></div>
+
+    <div class="card">
+      <div class="turnwho">내 차례</div>
+      <div class="goal">목표 뜻: 감사해요! 월요일에 시작했어요. 아직 적응 중이에요.</div>
+      <div class="textarea">영어로 말해 보세요 (또는 마이크 사용)</div>
+      <span class="mini">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
+        말하기
+      </span>
+      <div class="suggest">
+        <div class="lbl">제안 표현</div>
+        <div class="en">Thanks! Yeah, I started Monday. Still finding my way around.</div>
+        <span class="mini">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9a3 3 0 0 1 0 6"/><path d="M19 7a7 7 0 0 1 0 10"/></svg>
+          듣기
+        </span>
+      </div>
+      <div class="row">
+        <div class="btn outline">제안 표현 보기</div>
+        <div class="btn primary">다음 ›</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Generated design outputs (rebuild with design/build_mockups.py / seed-canvas.mjs)
+design/screens/
+design/mockups.html
+design/situ-screens.html
+
+# Local dev
+*.log
