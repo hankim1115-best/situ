@@ -6,8 +6,11 @@ const K_DRAFT = 'situ.draft';
 const K_PROFILE = 'situ.profile';
 
 const DEFAULT_SETTINGS = {
+  provider: 'claude', // 'claude' | 'groq'
   apiKey: '',
   model: 'claude-sonnet-5',
+  groqApiKey: '',
+  groqModel: 'llama-3.3-70b-versatile',
   voiceURI: '',
   speakRate: 0.95,
 };
@@ -66,6 +69,11 @@ export function saveSettings(patch) {
   state.settings = { ...state.settings, ...patch };
   write(K_CFG, state.settings);
   emit();
+}
+// True when the currently-selected generation provider has a key set.
+export function hasProviderKey() {
+  const st = state.settings;
+  return !!(st.provider === 'groq' ? st.groqApiKey : st.apiKey);
 }
 
 // ---------- profile (learner background, feeds every generation) ----------
