@@ -5,11 +5,14 @@ import { resultView } from './views/result.js';
 import { libraryView } from './views/library.js';
 import { setDetailView } from './views/setDetail.js';
 import { reviewView, resetReviewSession } from './views/review.js';
-import { practiceView, resetPracticeSession } from './views/practice.js';
+import { converseView, resetConverseSession } from './views/converse.js';
+import { pronounceView, resetPronounceSession } from './views/pronounce.js';
 import { keywordsView, resetKeywordsView } from './views/keywords.js';
+import { profileView } from './views/profile.js';
 import { settingsView } from './views/settings.js';
 
 route('/', () => mount(homeView()));
+route('/profile', (ctx) => mount(profileView(ctx)));
 route('/keywords', () => {
   resetKeywordsView();
   mount(keywordsView());
@@ -21,9 +24,13 @@ route('/review', (ctx) => {
   resetReviewSession();
   mount(reviewView(ctx));
 });
-route('/practice/:id', (ctx) => {
-  resetPracticeSession();
-  mount(practiceView(ctx));
+route('/converse/:id', (ctx) => {
+  resetConverseSession();
+  mount(converseView(ctx));
+});
+route('/pronounce/:id', (ctx) => {
+  resetPronounceSession();
+  mount(pronounceView(ctx));
 });
 route('/settings', () => mount(settingsView()));
 

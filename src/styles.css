@@ -292,3 +292,17 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--brand); out
 }
 details.raw { margin-top: 10px; }
 details.raw pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; background: var(--surface-2); padding: 12px; border-radius: 10px; overflow-x: auto; }
+
+/* conversation coaching feedback */
+.card.fb { border-left: 4px solid var(--border); }
+.card.fb.good { border-left-color: var(--ok); }
+.card.fb.ok { border-left-color: #b7791f; }
+.card.fb.awkward { border-left-color: var(--danger); }
+
+/* pronunciation check */
+.pron-target { font-size: 20px; font-weight: 700; line-height: 1.5; }
+.pron-words { font-size: 20px; font-weight: 700; line-height: 1.6; }
+.pron-words .w { padding: 1px 3px; border-radius: 4px; }
+.pron-words .w.ok { color: var(--ok); }
+.pron-words .w.miss { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+.pron-score { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }

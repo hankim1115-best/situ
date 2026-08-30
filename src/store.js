@@ -3,12 +3,25 @@
 const K_CFG = 'situ.settings';
 const K_SETS = 'situ.sets';
 const K_DRAFT = 'situ.draft';
+const K_PROFILE = 'situ.profile';
 
 const DEFAULT_SETTINGS = {
   apiKey: '',
   model: 'claude-sonnet-5',
   voiceURI: '',
   speakRate: 0.95,
+};
+
+const DEFAULT_PROFILE = {
+  role: '',
+  targetRole: '',
+  industry: '',
+  immigrationStream: '',
+  city: '',
+  family: '',
+  englishLevel: '',
+  weakSpots: '',
+  extra: '',
 };
 
 const DAY = 86400000;
@@ -33,6 +46,7 @@ const state = {
   settings: { ...DEFAULT_SETTINGS, ...read(K_CFG, {}) },
   sets: read(K_SETS, []),
   draft: read(K_DRAFT, null),
+  profile: { ...DEFAULT_PROFILE, ...read(K_PROFILE, {}) },
 };
 
 const subs = new Set();
@@ -52,6 +66,19 @@ export function saveSettings(patch) {
   state.settings = { ...state.settings, ...patch };
   write(K_CFG, state.settings);
   emit();
+}
+
+// ---------- profile (learner background, feeds every generation) ----------
+export function getProfile() {
+  return state.profile;
+}
+export function saveProfile(patch) {
+  state.profile = { ...state.profile, ...patch };
+  write(K_PROFILE, state.profile);
+  emit();
+}
+export function profileFilled() {
+  return Object.values(state.profile).some((v) => v && v.trim());
 }
 
 // ---------- draft (last generated, not yet saved) ----------
@@ -168,8 +195,50 @@ export function countDue(setId = null) {
   return collectDueCards({ setId, limit: 9999 }).length;
 }
 
+// ---------- weakness tally (from conversation debriefs) ----------
+const K_WEAK = 'situ.weakness';
+let weakness = read(K_WEAK, {});
+export function bumpWeakness(tags = []) {
+  for (const raw of tags) {
+    const tag = String(raw || '').trim();
+    if (!tag) continue;
+    weakness[tag] = (weakness[tag] || 0) + 1;
+  }
+  write(K_WEAK, weakness);
+}
+export function getWeakness() {
+  return Object.entries(weakness)
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+// ---------- append phrases into a set (from a debrief) ----------
+export function appendExpressions(setId, items = []) {
+  const s = getSet(setId);
+  if (!s) return 0;
+  s.pack.expressions = s.pack.expressions || [];
+  let added = 0;
+  const have = new Set(s.pack.expressions.map((e) => (e.en || '').toLowerCase().trim()));
+  for (const it of items) {
+    const en = (it.en || '').trim();
+    if (!en || have.has(en.toLowerCase())) continue;
+    s.pack.expressions.push({ en, ko: it.ko || '', register: 'neutral', when: '대화 연습에서 추천' });
+    have.add(en.toLowerCase());
+    added++;
+  }
+  if (added) {
+    write(K_SETS, state.sets);
+    emit();
+  }
+  return added;
+}
+
 export function exportData() {
-  return JSON.stringify({ version: 1, exportedAt: Date.now(), sets: state.sets }, null, 2);
+  return JSON.stringify(
+    { version: 2, exportedAt: Date.now(), profile: state.profile, sets: state.sets },
+    null,
+    2
+  );
 }
 export function importData(json) {
   const parsed = JSON.parse(json);
@@ -178,6 +247,10 @@ export function importData(json) {
   for (const s of parsed.sets) if (s && s.id) byId.set(s.id, s);
   state.sets = [...byId.values()].sort((a, b) => b.createdAt - a.createdAt);
   write(K_SETS, state.sets);
+  if (parsed.profile && typeof parsed.profile === 'object') {
+    state.profile = { ...DEFAULT_PROFILE, ...parsed.profile };
+    write(K_PROFILE, state.profile);
+  }
   emit();
   return state.sets.length;
 }

@@ -1,7 +1,7 @@
 import { h, mount, toast } from '../ui.js';
 import { screen } from '../chrome.js';
 import { navigate } from '../router.js';
-import { getSettings, setDraft } from '../store.js';
+import { getSettings, setDraft, profileFilled } from '../store.js';
 import { generatePack, generateKeywords } from '../api.js';
 
 const PARTNERS = [
@@ -157,11 +157,21 @@ export function homeView() {
         h('button', { class: 'btn sm', onClick: () => navigate('/settings') }, '설정에서 키 입력')
       );
 
+  const profileNotice = hasKey && !profileFilled()
+    ? h(
+        'section',
+        { class: 'card' },
+        h('p', { style: 'margin:0 0 10px;' }, '내 프로필(직무·목표·가족 등)을 채우면 예상 질문과 모범답변이 내 상황에 맞게 나와요.'),
+        h('button', { class: 'btn sm', onClick: () => navigate('/profile?from=home') }, '프로필 채우기')
+      )
+    : null;
+
   const body = h(
     'div',
     { class: 'stack' },
     h('div', { class: 'hero' }, h('h2', null, '어떤 상황을 영어로?'), h('p', null, '상황이나 주제를 적으면 표현·예상 질문·대화문을 만들어 드려요.')),
     keyNotice,
+    profileNotice,
     h('div', { class: 'section-title' }, '빠른 시작'),
     presetRow,
     h('label', { class: 'field' }, h('span', null, '상황 / 주제'), textarea),

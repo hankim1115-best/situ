@@ -18,7 +18,12 @@ Principles:
 - Call out pitfalls specific to Korean speakers (pronunciation, over-formality,
   direct translations that sound rude, missing articles, intonation).
 - Keep each English line short enough to actually say out loud.
-- Korean fields must be written in Korean. English fields in English.`;
+- Korean fields must be written in Korean. English fields in English.
+- When a learner profile is provided, personalize everything to that person:
+  the suggested answers ("A." lines, their_questions answers) must be built from
+  the learner's real background — job, target role, family, city, immigration
+  stream — not a generic invented persona. "their_questions" must be the
+  questions THIS person would actually be asked in this situation.`;
 
 export const TOOL = {
   name: 'build_pack',
@@ -153,15 +158,40 @@ const FORMALITY_LABEL = {
   formal: '격식 있게 (공식적인 자리, 면접, 관공서)',
 };
 
+const PROFILE_LABELS = {
+  role: '현재 직무/경력',
+  targetRole: '캐나다 목표 직무',
+  industry: '업계',
+  immigrationStream: '이민 스트림',
+  city: '정착 예정 도시',
+  family: '가족 상황',
+  englishLevel: '영어 레벨',
+  weakSpots: '내가 아는 내 약점',
+  extra: '기타 배경',
+};
+
+// Renders the filled learner-profile fields into a labelled Korean block.
+export function profileBlock(profile) {
+  if (!profile) return '';
+  const rows = Object.entries(PROFILE_LABELS)
+    .filter(([k]) => profile[k] && String(profile[k]).trim())
+    .map(([k, label]) => `- ${label}: ${String(profile[k]).trim()}`);
+  if (!rows.length) return '';
+  return ['[학습자 프로필 — 답변과 예상 질문을 이 사람에 맞게]', ...rows].join('\n');
+}
+
 function situationLines(input) {
   const depth = (input.depth && input.depth.length ? input.depth : ['스몰토크', '실무', '진지한 대화']).join(', ');
-  return [
+  const lines = [
     `상황/주제: ${input.text.trim()}`,
     input.partner ? `대화 상대: ${input.partner}` : null,
     `원하는 톤: ${FORMALITY_LABEL[input.formality] || FORMALITY_LABEL.neutral}`,
     `다뤄야 할 깊이: ${depth}`,
     input.goal ? `내가 바라는 결과: ${input.goal.trim()}` : null,
   ].filter(Boolean);
+  const pb = profileBlock(input.profile);
+  if (pb) lines.push('', pb);
+  return lines;
 }
 
 export function buildUserMessage(input) {
@@ -233,5 +263,129 @@ export function buildKeywordsMessage(input) {
     '이 상황을 영어로 하기 전에 먼저 외워 두면 좋은 핵심 단어·표현을 build_keywords 도구로 정리해 주세요.',
     '중요한 순서대로, 상황에서 실제로 쓰이는 어휘 위주로요.'
   );
+  return lines.join('\n');
+}
+
+// ===================== Live adaptive conversation =====================
+
+export const CONVERSE_SYSTEM = `You run a LIVE English role-play for a Korean speaker preparing for life in
+Canada. Play the OTHER person in the given situation — natural current Canadian
+English, realistic, 1–3 sentences per turn, never a monologue. Stay in role and
+keep the conversation moving toward the learner's goal.
+
+Each turn, call respond_and_coach:
+- reply / reply_ko: your next in-character line and a natural Korean gloss.
+- feedback: coaching on the learner's LAST message. Omit the whole feedback
+  object in 몰입(immersion) mode. Otherwise be concise and write it in Korean:
+  praise what sounded natural, flag Korean-transfer errors (articles,
+  prepositions, tense, over-formality, word-for-word translation, unnatural word
+  choice, word order), and give ONE improved rewrite of their line in English.
+- done: true once the conversation has reached a natural close.
+
+Use the learner profile so the scenario and your questions fit this specific
+person.`;
+
+export const CONVERSE_TOOL = {
+  name: 'respond_and_coach',
+  description: 'Reply in character and coach the learner on their last message.',
+  input_schema: {
+    type: 'object',
+    required: ['reply', 'reply_ko', 'done'],
+    properties: {
+      reply: { type: 'string' },
+      reply_ko: { type: 'string' },
+      feedback: {
+        type: 'object',
+        required: ['rating', 'natural', 'rewrite'],
+        properties: {
+          rating: { type: 'string', enum: ['good', 'ok', 'awkward'] },
+          natural: { type: 'string', description: 'Korean: what the learner did well this turn.' },
+          issues: {
+            type: 'array',
+            items: {
+              type: 'object',
+              required: ['type', 'note'],
+              properties: {
+                type: { type: 'string', description: 'Short Korean tag: 관사, 전치사, 시제, 격식, 직역, 어휘, 어순 …' },
+                note: { type: 'string', description: 'Korean, one line.' },
+              },
+            },
+          },
+          rewrite: { type: 'string', description: "A more natural English version of the learner's last message." },
+        },
+      },
+      done: { type: 'boolean' },
+    },
+  },
+};
+
+export const DEBRIEF_TOOL = {
+  name: 'debrief_conversation',
+  description: 'Summarize the finished role-play and give the learner priorities.',
+  input_schema: {
+    type: 'object',
+    required: ['summary', 'fix_top', 'strong_phrases', 'error_tags'],
+    properties: {
+      summary: { type: 'string', description: 'Korean, 2–3 sentences: overall how it went.' },
+      fix_top: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Korean, top 3 things to fix, most important first.',
+      },
+      strong_phrases: {
+        type: 'array',
+        description: '3 English phrases the learner could have used well in this conversation.',
+        items: {
+          type: 'object',
+          required: ['en', 'ko'],
+          properties: { en: { type: 'string' }, ko: { type: 'string' } },
+        },
+      },
+      best_rewrite: {
+        type: 'object',
+        properties: {
+          before: { type: 'string' },
+          after: { type: 'string' },
+          note: { type: 'string', description: 'Korean.' },
+        },
+      },
+      error_tags: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Korean tags for recurring mistakes in this conversation (관사, 전치사, 직역 …).',
+      },
+    },
+  },
+};
+
+function scenarioHeader(situation, profile) {
+  const lines = [
+    `상황: ${(situation.text || '').trim()}`,
+    situation.partner ? `상대(당신이 연기할 역할): ${situation.partner}` : null,
+    situation.formality ? `톤: ${FORMALITY_LABEL[situation.formality] || FORMALITY_LABEL.neutral}` : null,
+    situation.goal ? `학습자의 목표: ${situation.goal.trim()}` : null,
+  ].filter(Boolean);
+  const pb = profileBlock(profile);
+  if (pb) lines.push('', pb);
+  return lines.join('\n');
+}
+
+export function buildConverseMessage({ situation, profile, transcript = [], mode, latest, opener }) {
+  const lines = [scenarioHeader(situation, profile), ''];
+  lines.push(mode === 'immersion' ? '모드: 몰입 — 이번 응답에서 feedback 객체를 생략하세요.' : '모드: 코치 — feedback 포함.', '');
+  if (opener) {
+    lines.push('아직 대화가 시작되지 않았습니다. 상대(당신)가 먼저 자연스럽게 말을 겁니다. 이번 턴은 feedback을 생략하세요.');
+  } else {
+    lines.push('지금까지 대화:');
+    for (const t of transcript) lines.push(`${t.who === 'user' ? '학습자' : '상대'}: ${t.en}`);
+    lines.push('', `학습자가 방금 한 말: "${latest}"`, '', 'respond_and_coach로 이어서 응답하세요.');
+  }
+  return lines.join('\n');
+}
+
+export function buildDebriefMessage({ situation, profile, transcript = [] }) {
+  const lines = [scenarioHeader(situation, profile), '', '완료된 대화 전체:'];
+  for (const t of transcript) lines.push(`${t.who === 'user' ? '학습자' : '상대'}: ${t.en}`);
+  lines.push('', 'debrief_conversation으로 이 대화를 총평해 주세요.');
   return lines.join('\n');
 }

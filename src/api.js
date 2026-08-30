@@ -1,7 +1,7 @@
 // Direct browser call to the Claude API. The key is stored only on this device
 // and sent only to api.anthropic.com.
 
-import { getSettings } from './store.js';
+import { getSettings, getProfile } from './store.js';
 import {
   SYSTEM,
   TOOL,
@@ -9,7 +9,17 @@ import {
   KEYWORDS_SYSTEM,
   KEYWORDS_TOOL,
   buildKeywordsMessage,
+  CONVERSE_SYSTEM,
+  CONVERSE_TOOL,
+  DEBRIEF_TOOL,
+  buildConverseMessage,
+  buildDebriefMessage,
 } from './prompt.js';
+
+// Every generation carries the learner profile so callers don't have to.
+function withProfile(input) {
+  return { ...input, profile: input.profile || getProfile() };
+}
 
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
@@ -71,7 +81,7 @@ export async function generatePack(input) {
   const { data, usage, model } = await callTool({
     system: SYSTEM,
     tool: TOOL,
-    message: buildUserMessage(input),
+    message: buildUserMessage(withProfile(input)),
     maxTokens: 4500,
   });
   return { pack: data, usage, model };
@@ -81,10 +91,30 @@ export async function generateKeywords(input) {
   const { data, usage, model } = await callTool({
     system: KEYWORDS_SYSTEM,
     tool: KEYWORDS_TOOL,
-    message: buildKeywordsMessage(input),
+    message: buildKeywordsMessage(withProfile(input)),
     maxTokens: 2200,
   });
   return { keywords: data.keywords || [], title: data.title || '', note: data.note || '', usage, model };
+}
+
+export async function converseTurn(args) {
+  const { data, usage } = await callTool({
+    system: CONVERSE_SYSTEM,
+    tool: CONVERSE_TOOL,
+    message: buildConverseMessage({ ...args, profile: args.profile || getProfile() }),
+    maxTokens: 1200,
+  });
+  return { turn: data, usage };
+}
+
+export async function debriefConversation(args) {
+  const { data } = await callTool({
+    system: CONVERSE_SYSTEM,
+    tool: DEBRIEF_TOOL,
+    message: buildDebriefMessage({ ...args, profile: args.profile || getProfile() }),
+    maxTokens: 1400,
+  });
+  return data;
 }
 
 export async function testKey(apiKey) {

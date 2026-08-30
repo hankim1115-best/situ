@@ -1,6 +1,7 @@
 import { h, mount, toast } from '../ui.js';
 import { screen } from '../chrome.js';
-import { getSettings, saveSettings, exportData, importData, getSets } from '../store.js';
+import { navigate } from '../router.js';
+import { getSettings, saveSettings, exportData, importData, getSets, profileFilled } from '../store.js';
 import { testKey } from '../api.js';
 import { englishVoices, ttsSupported, speak } from '../tts.js';
 
@@ -85,6 +86,17 @@ export function settingsView() {
       keyInput,
       h('div', { class: 'row' }, toggleKeyBtn, testBtn),
       saveKeyBtn
+    ),
+
+    h(
+      'section',
+      { class: 'card stack' },
+      h('h3', null, '내 프로필'),
+      h('p', { class: 'small muted', style: 'margin:0;' },
+        profileFilled()
+          ? '직무·목표·가족 등을 바탕으로 예상 질문과 모범답변이 내 상황에 맞게 생성됩니다.'
+          : '아직 비어 있어요. 채우면 생성 결과가 훨씬 개인화됩니다.'),
+      h('button', { class: 'btn sm', type: 'button', onClick: () => navigate('/profile') }, profileFilled() ? '프로필 수정' : '프로필 채우기')
     ),
 
     h('label', { class: 'field' }, h('span', null, '생성 모델'), modelSelect),

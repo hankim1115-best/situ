@@ -15,7 +15,8 @@ export function setDetailView({ params }) {
   }
 
   const due = countDue(set.id);
-  const hasDialogue = (set.pack.dialogue || []).length > 0;
+  const canPronounce =
+    (set.pack.expressions || []).length + (set.pack.keywords || []).length + (set.pack.vocab || []).length > 0;
 
   const actions = [
     h('button', { class: 'iconbtn', onClick: onRename }, '이름변경'),
@@ -35,8 +36,11 @@ export function setDetailView({ params }) {
       'div',
       { class: 'row' },
       h('button', { class: 'btn primary', style: 'flex:1;', onClick: () => navigate('/review?set=' + set.id) }, due ? `복습 (${due})` : '복습'),
-      hasDialogue ? h('button', { class: 'btn', style: 'flex:1;', onClick: () => navigate('/practice/' + set.id) }, '역할극 연습') : null
+      h('button', { class: 'btn', style: 'flex:1;', onClick: () => navigate('/converse/' + set.id) }, '대화 연습')
     ),
+    canPronounce
+      ? h('button', { class: 'btn ghost block', onClick: () => navigate('/pronounce/' + set.id) }, '발음 연습')
+      : null,
     ...renderPack(set.pack),
     h('button', { class: 'btn danger block', onClick: onDelete }, '이 대화 팩 삭제')
   );
