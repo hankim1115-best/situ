@@ -212,6 +212,17 @@ export function getWeakness() {
     .sort((a, b) => b.count - a.count);
 }
 
+// ---------- polish log (recent "말 다듬기" results) ----------
+const K_POLISH = 'situ.polishLog';
+let polishLog = read(K_POLISH, []);
+export function addPolish(entry) {
+  polishLog = [{ ...entry, at: Date.now() }, ...polishLog].slice(0, 20);
+  write(K_POLISH, polishLog);
+}
+export function getPolishLog() {
+  return polishLog;
+}
+
 // ---------- append phrases into a set (from a debrief) ----------
 export function appendExpressions(setId, items = []) {
   const s = getSet(setId);

@@ -8,10 +8,15 @@ import { reviewView, resetReviewSession } from './views/review.js';
 import { converseView, resetConverseSession } from './views/converse.js';
 import { pronounceView, resetPronounceSession } from './views/pronounce.js';
 import { keywordsView, resetKeywordsView } from './views/keywords.js';
+import { polishView, resetPolishView } from './views/polish.js';
 import { profileView } from './views/profile.js';
 import { settingsView } from './views/settings.js';
 
 route('/', () => mount(homeView()));
+route('/polish', () => {
+  resetPolishView();
+  mount(polishView());
+});
 route('/profile', (ctx) => mount(profileView(ctx)));
 route('/keywords', () => {
   resetKeywordsView();

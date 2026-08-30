@@ -1,6 +1,6 @@
 /* Situ service worker — offline app shell + saved data.
    Bump CACHE whenever the file list or any cached file changes. */
-const CACHE = 'situ-v3';
+const CACHE = 'situ-v4';
 
 const CORE = [
   './',
@@ -25,6 +25,7 @@ const CORE = [
   './src/views/converse.js',
   './src/views/pronounce.js',
   './src/views/keywords.js',
+  './src/views/polish.js',
   './src/views/profile.js',
   './src/views/settings.js',
   './assets/icon-192.png',

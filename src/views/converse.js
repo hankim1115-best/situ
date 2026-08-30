@@ -103,6 +103,9 @@ export function converseView({ params }) {
           h('h3', { style: 'margin:0;' }, '직전 내 말 피드백'),
           h('span', { class: 'tag' }, ({ good: '자연스러움', ok: '보통', awkward: '어색' })[session.feedback.rating] || '보통')
         ),
+        session.feedback.heard_cleaned
+          ? h('div', { class: 'meta', style: 'margin-top:6px;' }, '정리하면: ' + session.feedback.heard_cleaned)
+          : null,
         session.feedback.natural ? h('p', { class: 'small', style: 'margin:8px 0 0;' }, '👍 ' + session.feedback.natural) : null,
         ...(session.feedback.issues || []).map((i) => h('div', { class: 'meta', style: 'margin-top:4px;' }, `${i.type} · ${i.note}`)),
         session.feedback.rewrite

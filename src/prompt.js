@@ -277,6 +277,7 @@ Each turn, call respond_and_coach:
 - reply / reply_ko: your next in-character line and a natural Korean gloss.
 - feedback: coaching on the learner's LAST message. Omit the whole feedback
   object in 몰입(immersion) mode. Otherwise be concise and write it in Korean:
+  set heard_cleaned to their message written out as one clean correct sentence,
   praise what sounded natural, flag Korean-transfer errors (articles,
   prepositions, tense, over-formality, word-for-word translation, unnatural word
   choice, word order), and give ONE improved rewrite of their line in English.
@@ -298,6 +299,10 @@ export const CONVERSE_TOOL = {
         type: 'object',
         required: ['rating', 'natural', 'rewrite'],
         properties: {
+          heard_cleaned: {
+            type: 'string',
+            description: "The learner's last message written out as one clean, correct sentence (faithful to intent). Helps them see if a problem was pronunciation/STT or wording.",
+          },
           rating: { type: 'string', enum: ['good', 'ok', 'awkward'] },
           natural: { type: 'string', description: 'Korean: what the learner did well this turn.' },
           issues: {
@@ -387,5 +392,76 @@ export function buildDebriefMessage({ situation, profile, transcript = [] }) {
   const lines = [scenarioHeader(situation, profile), '', '완료된 대화 전체:'];
   for (const t of transcript) lines.push(`${t.who === 'user' ? '학습자' : '상대'}: ${t.en}`);
   lines.push('', 'debrief_conversation으로 이 대화를 총평해 주세요.');
+  return lines.join('\n');
+}
+
+// ===================== Polish (clean up + correct + upgrade an utterance) =====================
+
+export const POLISH_SYSTEM = `You help a Korean speaker learning English for life in Canada turn what they
+just said (often messy speech-to-text) into correct, natural English, and show
+them how to say it better.
+
+Via polish_utterance:
+- cleaned: their utterance written out as correct, natural sentence(s). Stay
+  faithful to what they meant — fix grammar, word choice, and obvious
+  speech-to-text noise, but do NOT add new ideas or inflate the message.
+- meaning_ko: what "cleaned" means, in Korean, so they can confirm it matches
+  their intent.
+- issues: each real error in the ORIGINAL — the exact wrong span, a short Korean
+  category tag (관사, 전치사, 시제, 어순, 어휘, 직역, 관용표현, 단복수 …), a
+  one-line Korean explanation, and the corrected fragment in English. Empty
+  array if the original was already fine.
+- better: 2–3 stronger versions, from a safe upgrade to how a fluent Canadian
+  speaker would actually put it. Each with a Korean gloss and a short Korean note
+  on nuance / when to use it.
+- register_note: Korean, only if tone/formality is worth flagging for the
+  given context.
+Canadian English. English fields in English, Korean fields in Korean.`;
+
+export const POLISH_TOOL = {
+  name: 'polish_utterance',
+  description: "Clean up the learner's spoken English, flag errors, suggest better phrasing.",
+  input_schema: {
+    type: 'object',
+    required: ['cleaned', 'meaning_ko', 'issues', 'better'],
+    properties: {
+      cleaned: { type: 'string' },
+      meaning_ko: { type: 'string' },
+      issues: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['span', 'type', 'problem', 'fix'],
+          properties: {
+            span: { type: 'string', description: 'The exact wrong part of the original.' },
+            type: { type: 'string', description: 'Short Korean category tag.' },
+            problem: { type: 'string', description: 'Korean, one line — what is wrong and why.' },
+            fix: { type: 'string', description: 'The corrected fragment, in English.' },
+          },
+        },
+      },
+      better: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['en', 'ko'],
+          properties: {
+            en: { type: 'string' },
+            ko: { type: 'string' },
+            note: { type: 'string', description: 'Korean: nuance / when to use.' },
+          },
+        },
+      },
+      register_note: { type: 'string' },
+    },
+  },
+};
+
+export function buildPolishMessage({ text, context, profile }) {
+  const lines = [`학습자가 한 말 (음성 인식 결과일 수 있음): "${(text || '').trim()}"`];
+  if (context && context.trim()) lines.push(`상황/의도: ${context.trim()}`);
+  const pb = profileBlock(profile);
+  if (pb) lines.push('', pb);
+  lines.push('', 'polish_utterance로 다듬은 문장 · 오류 지적 · 더 나은 표현을 주세요.');
   return lines.join('\n');
 }

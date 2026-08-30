@@ -166,12 +166,22 @@ export function homeView() {
       )
     : null;
 
+  const polishCard = h(
+    'section',
+    { class: 'card', style: 'display:flex; align-items:center; gap:12px;' },
+    h('div', { style: 'flex:1;' },
+      h('div', { style: 'font-weight:600;' }, '말 다듬기'),
+      h('div', { class: 'small muted' }, '내가 한 영어를 문장으로 정리하고 고쳐 드려요')),
+    h('button', { class: 'btn sm', onClick: () => navigate('/polish') }, '열기')
+  );
+
   const body = h(
     'div',
     { class: 'stack' },
     h('div', { class: 'hero' }, h('h2', null, '어떤 상황을 영어로?'), h('p', null, '상황이나 주제를 적으면 표현·예상 질문·대화문을 만들어 드려요.')),
     keyNotice,
     profileNotice,
+    polishCard,
     h('div', { class: 'section-title' }, '빠른 시작'),
     presetRow,
     h('label', { class: 'field' }, h('span', null, '상황 / 주제'), textarea),

@@ -14,6 +14,9 @@ import {
   DEBRIEF_TOOL,
   buildConverseMessage,
   buildDebriefMessage,
+  POLISH_SYSTEM,
+  POLISH_TOOL,
+  buildPolishMessage,
 } from './prompt.js';
 
 // Every generation carries the learner profile so callers don't have to.
@@ -113,6 +116,16 @@ export async function debriefConversation(args) {
     tool: DEBRIEF_TOOL,
     message: buildDebriefMessage({ ...args, profile: args.profile || getProfile() }),
     maxTokens: 1400,
+  });
+  return data;
+}
+
+export async function polishUtterance(input) {
+  const { data } = await callTool({
+    system: POLISH_SYSTEM,
+    tool: POLISH_TOOL,
+    message: buildPolishMessage(withProfile(input)),
+    maxTokens: 1500,
   });
   return data;
 }
