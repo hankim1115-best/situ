@@ -1,7 +1,7 @@
 import { h, mount, toast } from '../ui.js';
 import { screen } from '../chrome.js';
 import { navigate } from '../router.js';
-import { getSettings, setDraft, profileFilled } from '../store.js';
+import { setDraft, profileFilled, hasProviderKey } from '../store.js';
 import { generatePack, generateKeywords } from '../api.js';
 
 const PARTNERS = [
@@ -36,7 +36,7 @@ const form = {
 };
 
 export function homeView() {
-  const hasKey = !!getSettings().apiKey;
+  const hasKey = hasProviderKey();
 
   const textarea = h('textarea', {
     placeholder: '예: 새 팀에 합류한 첫날, 팀원들에게 나를 소개하고 자연스럽게 대화 나누기',
@@ -153,8 +153,8 @@ export function homeView() {
     : h(
         'section',
         { class: 'card' },
-        h('p', { style: 'margin:0 0 10px;' }, 'API 키가 아직 없어요. 대화 팩을 생성하려면 Claude API 키가 필요합니다.'),
-        h('button', { class: 'btn sm', onClick: () => navigate('/settings') }, '설정에서 키 입력')
+        h('p', { style: 'margin:0 0 10px;' }, '생성용 API 키가 아직 없어요. 설정에서 Claude 키를 넣거나, 무료 Groq로 전환하세요.'),
+        h('button', { class: 'btn sm', onClick: () => navigate('/settings') }, '설정 열기')
       );
 
   const profileNotice = hasKey && !profileFilled()
@@ -206,7 +206,7 @@ export function homeView() {
       toast('상황이나 주제를 입력하세요.');
       return;
     }
-    if (!getSettings().apiKey) {
+    if (!hasProviderKey()) {
       navigate('/settings');
       return;
     }
@@ -230,7 +230,7 @@ export function homeView() {
       toast('상황이나 주제를 입력하세요.');
       return;
     }
-    if (!getSettings().apiKey) {
+    if (!hasProviderKey()) {
       navigate('/settings');
       return;
     }
