@@ -3,7 +3,7 @@ import { screen } from '../chrome.js';
 import { navigate } from '../router.js';
 import { getSettings, saveSettings, exportData, importData, getSets, profileFilled } from '../store.js';
 import { testKey } from '../api.js';
-import { englishVoices, ttsSupported, speak } from '../tts.js';
+import { rankedEnglishVoices, ttsSupported, speak } from '../tts.js';
 
 const MODELS = [
   ['claude-sonnet-5', 'Sonnet 5 — 균형 (권장)'],
@@ -52,12 +52,15 @@ export function settingsView() {
     ...MODELS.map(([v, label]) => h('option', { value: v, selected: s.model === v }, label))
   );
 
-  const voices = englishVoices();
+  const voices = rankedEnglishVoices();
   const voiceSelect = h(
     'select',
     { onchange: (e) => saveSettings({ voiceURI: e.target.value }) },
-    h('option', { value: '' }, '자동 (캐나다/미국 우선)'),
-    ...voices.map((v) => h('option', { value: v.voiceURI, selected: s.voiceURI === v.voiceURI }, `${v.name} (${v.lang})`))
+    h('option', { value: '' }, '자동 (가장 자연스러운 음성 우선)'),
+    ...voices.map((v) =>
+      h('option', { value: v.voiceURI, selected: s.voiceURI === v.voiceURI },
+        `${v.name} (${v.lang})${v.localService === false ? ' · 온라인' : ''}`)
+    )
   );
 
   const rate = h('input', {
@@ -108,7 +111,9 @@ export function settingsView() {
           h('h3', null, '음성 (듣기)'),
           voiceSelect,
           h('label', { class: 'field' }, h('span', null, '말하기 속도'), rate),
-          h('button', { class: 'btn sm', type: 'button', onClick: () => speak('Hi, this is how the voice sounds. Nice to meet you.') }, '샘플 듣기')
+          h('button', { class: 'btn sm', type: 'button', onClick: () => speak('Hi, this is how the voice sounds. Nice to meet you.') }, '샘플 듣기'),
+          h('p', { class: 'small muted', style: 'margin:0;' },
+            '기계음처럼 들리면: 목록에서 "온라인" 표시가 있는 음성을 고르세요. 없으면 폰의 시스템 설정에서 고품질 음성을 받을 수 있어요 — Android: 설정 › 텍스트 음성 변환 › Google 엔진에서 영어 음성 다운로드. iPhone: 설정 › 손쉬운 사용 › 콘텐츠 말하기 › 음성 › English에서 고급/향상됨 음성 다운로드. PC라면 Edge 브라우저 음성이 크롬보다 훨씬 자연스럽습니다.')
         )
       : h('section', { class: 'card' }, h('p', { class: 'muted small', style: 'margin:0;' }, '이 브라우저는 음성 재생을 지원하지 않아요.')),
 

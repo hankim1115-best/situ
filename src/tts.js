@@ -17,6 +17,27 @@ export function englishVoices() {
   return voices.filter((v) => /^en(-|_)/i.test(v.lang));
 }
 
+// Rough quality ranking: cloud/neural voices sound far less robotic than the
+// bundled desktop SAPI ones (David/Zira/eSpeak).
+export function voiceScore(v) {
+  const n = (v.name || '').toLowerCase();
+  let s = 0;
+  if (v.localService === false) s += 6; // network / cloud voice
+  if (/google|natural|neural|siri|premium|enhanced|wavenet|online/.test(n)) s += 5;
+  if (/en-ca/i.test(v.lang)) s += 3;
+  else if (/en-us/i.test(v.lang)) s += 2;
+  else if (/en-gb|en-au/i.test(v.lang)) s += 1;
+  if (/david|zira|mark|hazel|desktop|espeak|compact|pico/.test(n)) s -= 4; // robotic
+  if (v.default) s += 0.5;
+  return s;
+}
+
+export function rankedEnglishVoices() {
+  return englishVoices()
+    .slice()
+    .sort((a, b) => voiceScore(b) - voiceScore(a));
+}
+
 export function ttsSupported() {
   return 'speechSynthesis' in window;
 }
@@ -27,14 +48,7 @@ function pickVoice() {
     const exact = voices.find((v) => v.voiceURI === voiceURI);
     if (exact) return exact;
   }
-  const en = englishVoices();
-  return (
-    en.find((v) => /en-CA/i.test(v.lang)) ||
-    en.find((v) => /en-US/i.test(v.lang)) ||
-    en.find((v) => /en-GB/i.test(v.lang)) ||
-    en[0] ||
-    null
-  );
+  return rankedEnglishVoices()[0] || null;
 }
 
 export function speak(text) {
